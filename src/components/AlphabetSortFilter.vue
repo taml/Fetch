@@ -1,15 +1,11 @@
 <script setup>
     const props = defineProps({
-        letterObj: Object,
+        letter: String,
     })
 </script>
 
 <template>
-    <div>
-        {{ letterObj.letter }}
-    </div>
+    <span class="letter-filter">
+        {{ letter.toUpperCase() }}
+    </span>
 </template>
-
-<style scoped>
-
-</style>
