@@ -1,5 +1,5 @@
 <script setup>
-  import ContentPanel from '../components/ContentPanel.vue';
+  import ContentPanel from '../components/ContentPanel.vue'
 </script>
 
 <template>

@@ -6,7 +6,7 @@ const getDogBreeds = async () => {
     return Promise.reject()
 }
 
-const getDogBreed = async (breed) => {
+const getDogBreedPictures = async (breed) => {
     const dogBreed = await fetch(`https://dog.ceo/api/breed/${breed}/images`)
     if(dogBreed.status === 200 && dogBreed.ok === true) {
         return await dogBreed.json()
@@ -14,7 +14,7 @@ const getDogBreed = async (breed) => {
     return Promise.reject()
 }
 
-const getDogSubBreed = async (breed, subBreed) => {
+const getDogSubBreedPictures = async (breed, subBreed) => {
     const dogSubBreed = await fetch(`https://dog.ceo/api/breed/${breed}/${subBreed}/images`)
     if(dogSubBreed.status === 200 && dogSubBreed.ok === true) {
         return await dogSubBreed.json()
@@ -22,4 +22,4 @@ const getDogSubBreed = async (breed, subBreed) => {
     return Promise.reject()
 }
 
-export { getDogBreeds, getDogBreed, getDogSubBreed }
+export { getDogBreeds, getDogBreedPictures, getDogSubBreedPictures }

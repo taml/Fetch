@@ -1,5 +1,6 @@
 <script setup>
     import { ref, onMounted, computed } from 'vue'
+    import { useDogStore } from '../stores/dogStore'
     import { getDogBreeds } from '../services/api'
     import AlphabetSortFilter from './AlphabetSortFilter.vue'
     import FilterItem from './FilterItem.vue'
@@ -9,6 +10,9 @@
     let dogBreedNames = []
     const selectedLetter = ref('')
     const noDogsMessage = ref('')
+    const dogStore = useDogStore()
+    const { updateDogBreed } = dogStore
+
     // const dogBreedFilterList = computed(() => {
     //     return dogBreedNames.filter((breed) => breed.toLowerCase().charAt(0) === selectedLetter.value)
     // })
@@ -47,7 +51,7 @@
             <div :class="['letter-filter-container', selectedLetter === letter && 'letter-active']" v-for="letter in alphabet" @click="findBreedMatches(letter)">
                 <AlphabetSortFilter :letter="letter" :key="letter" />
             </div>
-            <div v-if="(dogBreedFilterList.length > 0)" v-for="breed in dogBreedFilterList">
+            <div v-if="(dogBreedFilterList.length > 0)" v-for="breed in dogBreedFilterList" @click="updateDogBreed({breed, subBreed: false})">
                 <FilterItem :breed="breed" :key="breed" />
             </div>
             <div v-if="(noDogsMessage.length > 0)">
