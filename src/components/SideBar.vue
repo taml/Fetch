@@ -60,7 +60,7 @@
             </div>
             <div v-if="(dogBreedFilterList.length > 0)" v-for="breed in dogBreedFilterList">
                 <FilterItem :breed="breed" :key="breed" @click="updateDogBreed(breed)" />
-                <div v-if="(dogBreeds[breed].length > 0)">
+                <div class="subbreeds-list" v-if="(dogBreeds[breed].length > 0)">
                     <div v-for="sub in dogBreeds[breed]">
                         <FilterItem :breed="sub" :key="sub" @click="updateDogSubBreed(breed, sub)" />
                     </div>
@@ -77,7 +77,7 @@
     .main-navigation {
         display: flex;
         flex-direction: column;
-        flex-basis: 320px;
+        flex: 0 0 320px;
         background: #CFF3C7;
         padding: 20px;
     }
@@ -96,5 +96,9 @@
 
     .letter-active {
         background: grey;
+    }
+
+    .subbreeds-list {
+        padding-left: 10px;
     }
 </style>

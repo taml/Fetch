@@ -6,9 +6,13 @@
 
 <template>
     <div>
-        <img :src="url" alt=""/>
+        <img class="card-img" :src="url" alt=""/>
     </div>
 </template>
 
 <style scoped>
+
+    .card-img {
+        width: 100%;
+    }
 </style>

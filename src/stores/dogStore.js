@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { getDogBreedPictures, getDogSubBreedPictures } from '../services/api'
 
@@ -8,11 +8,23 @@ export const useDogStore = defineStore("dogStore", () => {
     const dogBreedError = ref('')
     const dogsAreLoading = ref(false)
     const dogPictures = ref([])
+    const skip = 6
+    const currentPage = ref(1)
+
+    const getSliceofDogPictures = computed(() => {
+        return dogPictures.value.slice(skip * currentPage.value - skip, skip * currentPage.value)
+    })
+
+    const getNumPages = computed(() => {
+        return Math.ceil(dogPictures.value.length / skip)
+    })
 
     const updateDogBreed = (breed) => {
         updateDogsAreLoading(true)
         updateDogAPIErrorMsg('')
+        currentPage.value = 1
         dogBreed.value = breed
+        dogSubBreed.value = ''
         if(dogBreed.value.length > 0) {
             getDogBreedPictures(dogBreed.value).then((dogPics) => {
                 if(dogPics.status === 'success') {
@@ -30,6 +42,7 @@ export const useDogStore = defineStore("dogStore", () => {
     const updateDogSubBreed = (breed, subBreed) => {
         updateDogsAreLoading(true)
         updateDogAPIErrorMsg('')
+        currentPage.value = 1
         dogBreed.value = breed
         dogSubBreed.value = subBreed
         if(dogBreed.value.length > 0 && dogSubBreed.value.length > 0) {
@@ -54,8 +67,17 @@ export const useDogStore = defineStore("dogStore", () => {
         dogsAreLoading.value = areLoading
     }
 
+    const incrementCurrentPage = () => {
+        currentPage.value++
+    }
+
+    const decrementCurrentPage = () => {
+        currentPage.value--
+    }
+
     return { 
-        dogBreed, dogBreedError, dogsAreLoading, dogPictures, 
-        updateDogBreed, updateDogSubBreed, updateDogAPIErrorMsg, updateDogsAreLoading  
+        dogBreed, dogSubBreed, dogBreedError, dogsAreLoading, dogPictures, currentPage, getNumPages, getSliceofDogPictures,
+        updateDogBreed, updateDogSubBreed, updateDogAPIErrorMsg, updateDogsAreLoading,
+        incrementCurrentPage, decrementCurrentPage  
     }
 })
