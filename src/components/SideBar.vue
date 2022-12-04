@@ -11,7 +11,7 @@
     const selectedLetter = ref('')
     const noDogsMessage = ref('')
     const dogStore = useDogStore()
-    const { updateDogBreed } = dogStore
+    const { updateDogBreed, updateDogSubBreed } = dogStore
 
     // const dogBreedFilterList = computed(() => {
     //     return dogBreedNames.filter((breed) => breed.toLowerCase().charAt(0) === selectedLetter.value)
@@ -42,6 +42,9 @@
             console.log(err)
         })
     })
+    const testClick = () => {
+        console.log('clicked')
+    }
 </script>
 
 <template>
@@ -51,8 +54,13 @@
             <div :class="['letter-filter-container', selectedLetter === letter && 'letter-active']" v-for="letter in alphabet" @click="findBreedMatches(letter)">
                 <AlphabetSortFilter :letter="letter" :key="letter" />
             </div>
-            <div v-if="(dogBreedFilterList.length > 0)" v-for="breed in dogBreedFilterList" @click="updateDogBreed({breed, subBreed: false})">
-                <FilterItem :breed="breed" :key="breed" />
+            <div v-if="(dogBreedFilterList.length > 0)" v-for="breed in dogBreedFilterList">
+                <FilterItem :breed="breed" :key="breed" @click="updateDogBreed(breed)" />
+                <div v-if="(dogBreeds[breed].length > 0)">
+                    <div v-for="sub in dogBreeds[breed]">
+                        <FilterItem :breed="sub" :key="sub" @click="updateDogSubBreed(breed, sub)" />
+                    </div>
+                </div>
             </div>
             <div v-if="(noDogsMessage.length > 0)">
                 <p>{{noDogsMessage}}</p>
