@@ -11,7 +11,7 @@
     const selectedLetter = ref('')
     const noDogsMessage = ref('')
     const dogStore = useDogStore()
-    const { updateDogBreed, updateDogSubBreed } = dogStore
+    const { updateDogBreed, updateDogSubBreed, updateDogsAreLoading, updateDogAPIErrorMsg } = dogStore
 
     // const dogBreedFilterList = computed(() => {
     //     return dogBreedNames.filter((breed) => breed.toLowerCase().charAt(0) === selectedLetter.value)
@@ -36,15 +36,19 @@
         generateAlphabet()
 
         getDogBreeds().then((breeds) => {
-            if(breeds.status === 'success') dogBreeds = breeds.message
-            dogBreedNames = Object.keys(dogBreeds)
+            updateDogsAreLoading(true)
+            updateDogAPIErrorMsg('')
+            if(breeds.status === 'success') {
+                dogBreeds = breeds.message
+                dogBreedNames = Object.keys(dogBreeds)
+                updateDogsAreLoading(false)
+            }
         }).catch((err) => {
             console.log(err)
+            updateDogsAreLoading(false)
+            updateDogAPIErrorMsg(`There was an issue fetching the dog breeds list!`)
         })
     })
-    const testClick = () => {
-        console.log('clicked')
-    }
 </script>
 
 <template>
