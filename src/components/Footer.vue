@@ -24,6 +24,7 @@
         justify-content: space-between;
         padding: 20px;
         width: 100%;
+        font-family: 'Londrina Solid', sans-serif;
     }
 
     .footer-credits {
@@ -32,6 +33,11 @@
 
     .footer-links {
         flex-grow: 1;
+        font-weight: 300;
+    }
+
+    .footer-links ul li:first-child {
+        font-weight: 400;
     }
 
     .footer-links ul {

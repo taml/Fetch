@@ -6,11 +6,41 @@
 
     const props = defineProps({
         breed: String,
+        hasSubBreed: Boolean
     })
 </script>
 
 <template>
-    <div class="letter-filter">
-        <p><span v-if="breed === dogBreed"><font-awesome-icon icon="fa-solid fa-paw" /></span>{{ breed }}</p>
+    <div class="filter-item">
+        <p>
+            <span :class="['breed-icon', breed !== dogBreed && 'selected-breed']"><font-awesome-icon icon="fa-solid fa-paw" /></span>
+                {{ breed }}
+            <span v-if="hasSubBreed"><font-awesome-icon icon="fa-solid fa-caret-down" /></span>
+        </p>
     </div>
 </template>
+
+<style scoped>
+    .filter-item {
+        font-family: 'Londrina Solid', sans-serif;
+        font-size: 18px;
+        text-transform: capitalize;
+        color: #35343e;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        cursor: pointer;
+    }
+
+    .selected-breed {
+        visibility: hidden;
+    }
+
+    .breed-icon {
+        padding-right: 5px;
+        color: #808080;
+    }
+
+    .fa-caret-down {
+        padding-left: 5px;
+    }
+</style>

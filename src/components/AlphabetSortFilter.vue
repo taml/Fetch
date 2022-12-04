@@ -9,3 +9,10 @@
         {{ letter.toUpperCase() }}
     </span>
 </template>
+
+<style scoped>
+    .letter-filter {
+        font-family: 'Londrina Solid', sans-serif;
+        font-weight: 300;
+    }
+</style>
