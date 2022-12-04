@@ -1,23 +1,24 @@
 <script setup>
-    import { ref, onMounted, computed } from 'vue'
+    import { ref, onMounted, onUnmounted, computed } from 'vue'
     import { useDogStore } from '../stores/dogStore'
     import { getDogBreeds } from '../services/api'
     import AlphabetSortFilter from './AlphabetSortFilter.vue'
     import FilterItem from './FilterItem.vue'
 
+    const dogStore = useDogStore()
+    const { updateDogBreed, updateDogSubBreed, updateDogsAreLoading, updateDogAPIErrorMsg } = dogStore
+    const windowSizeWidth = ref(window.innerWidth)
+    const toggleMenu = ref(false)
     const alphabet = ref([])
     let dogBreeds = {}
     let dogBreedNames = []
+    const dogBreedFilterList = ref([])
     const selectedLetter = ref('')
     const noDogsMessage = ref('')
-    const dogStore = useDogStore()
-    const { updateDogBreed, updateDogSubBreed, updateDogsAreLoading, updateDogAPIErrorMsg } = dogStore
 
     // const dogBreedFilterList = computed(() => {
     //     return dogBreedNames.filter((breed) => breed.toLowerCase().charAt(0) === selectedLetter.value)
     // })
-
-   const dogBreedFilterList = ref([])
 
     const generateAlphabet = () => {
         for (let i = 0; i < 26; i++) {
@@ -33,6 +34,8 @@
     }
 
     onMounted(() => {
+        window.addEventListener('resize', () => {windowSizeWidth.value = window.innerWidth})
+
         generateAlphabet()
 
         getDogBreeds().then((breeds) => {
@@ -49,10 +52,19 @@
             updateDogAPIErrorMsg(`There was an issue fetching the dog breeds list!`)
         })
     })
+
+    onUnmounted(() => {
+        window.removeEventListener('resize', () => {windowSizeWidth.value = window.innerWidth})
+    })
+
+    console.log(windowSizeWidth.value)
 </script>
 
 <template>
-    <nav class="main-navigation">
+    <nav :class="['main-navigation', (!toggleMenu && windowSizeWidth <= 600) && 'hide-main-navigation']">
+        <div v-if="windowSizeWidth <= 600" class="menu-toggle" @click="toggleMenu = !toggleMenu">
+            <font-awesome-icon icon="fa-solid fa-bars" />
+        </div>
         <h1>Fetch</h1>
         <div>
             <div :class="['letter-filter-container', selectedLetter === letter && 'letter-active']" v-for="letter in alphabet" @click="findBreedMatches(letter)">
@@ -80,6 +92,25 @@
         flex: 0 0 320px;
         background: #CFF3C7;
         padding: 20px;
+    }
+
+    @media screen and (max-width: 600px) {
+        .main-navigation {
+            display: block;
+            width: 320px;
+            position: fixed;
+            z-index: 1;
+            height: 100%;
+        }
+    }
+
+    .hide-main-navigation {
+        margin-left: -320px;
+    }
+
+    .menu-toggle {
+        position: relative;
+        right: -320px;
     }
 
     .letter-filter-container {

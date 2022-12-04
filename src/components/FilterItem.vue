@@ -11,6 +11,6 @@
 
 <template>
     <div class="letter-filter">
-        <p><span v-if="breed === dogBreed"><font-awesome-icon icon="fa-solid fa-paw" @click="removeDep(index)" /></span>{{ breed }}</p>
+        <p><span v-if="breed === dogBreed"><font-awesome-icon icon="fa-solid fa-paw" /></span>{{ breed }}</p>
     </div>
 </template>

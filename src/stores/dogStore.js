@@ -11,7 +11,7 @@ export const useDogStore = defineStore("dogStore", () => {
     const skip = 6
     const currentPage = ref(1)
 
-    const getSliceofDogPictures = computed(() => {
+    const getSliceOfDogPictures = computed(() => {
         return dogPictures.value.slice(skip * currentPage.value - skip, skip * currentPage.value)
     })
 
@@ -76,7 +76,7 @@ export const useDogStore = defineStore("dogStore", () => {
     }
 
     return { 
-        dogBreed, dogSubBreed, dogBreedError, dogsAreLoading, dogPictures, currentPage, getNumPages, getSliceofDogPictures,
+        dogBreed, dogSubBreed, dogBreedError, dogsAreLoading, dogPictures, currentPage, getNumPages, getSliceOfDogPictures,
         updateDogBreed, updateDogSubBreed, updateDogAPIErrorMsg, updateDogsAreLoading,
         incrementCurrentPage, decrementCurrentPage  
     }

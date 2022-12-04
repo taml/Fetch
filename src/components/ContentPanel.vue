@@ -6,7 +6,7 @@
     import ContentPagination from './ContentPagination.vue'
 
     const dogStore = useDogStore()
-    const { dogPictures, dogsAreLoading, dogBreedError, getSliceofDogPictures } = storeToRefs(dogStore)
+    const { dogPictures, dogsAreLoading, dogBreedError, getSliceOfDogPictures } = storeToRefs(dogStore)
 </script>
 
 <template>
@@ -18,7 +18,7 @@
             {{ dogBreedError }}
         </div>
         <div v-else class="grid">
-            <div class="grid-item" v-for="url in getSliceofDogPictures">
+            <div class="grid-item" v-for="url in getSliceOfDogPictures">
                 <DogCard :url="url" />
             </div>
             <ContentPagination />
