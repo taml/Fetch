@@ -25,7 +25,7 @@
         font-family: 'Londrina Solid', sans-serif;
         font-size: 18px;
         text-transform: capitalize;
-        color: #35343e;
+        color: #FFFFFF;
         padding-top: 5px;
         padding-bottom: 5px;
         cursor: pointer;
@@ -37,7 +37,7 @@
 
     .breed-icon {
         padding-right: 5px;
-        color: #808080;
+        color: #D1D0D0;
     }
 
     .fa-caret-down {

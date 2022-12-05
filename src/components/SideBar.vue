@@ -30,7 +30,7 @@
         // dogBreedFilterList.value = []
         selectedLetter.value = letter
         dogBreedFilterList.value = dogBreedNames.filter((breed) => breed.toLowerCase().charAt(0) === letter) 
-        dogBreedFilterList.value.length === 0 ? noDogsMessage.value = `Sorry there are no dog breeds available for letter ${selectedLetter.value.toUpperCase()}!` : noDogsMessage.value = ''
+        dogBreedFilterList.value.length === 0 ? noDogsMessage.value = `Sorry there are no dog breeds available for letter ${selectedLetter.value.toUpperCase()}. Why not try a different letter!` : noDogsMessage.value = ''
     }
 
     onMounted(() => {
@@ -65,7 +65,7 @@
         <div v-if="windowSizeWidth <= 600" class="menu-toggle" @click="toggleMenu = !toggleMenu">
             <font-awesome-icon icon="fa-solid fa-bars" />
         </div>
-        <h1 class="site-title"><font-awesome-icon icon="fa-solid fa-dog" /> Fetch</h1>
+        <h1 class="site-title">&#128054; Fetch</h1>
         <hr/>
         <div>
             <div :class="['letter-filter-container', selectedLetter === letter && 'letter-active']" v-for="letter in alphabet" @click="findBreedMatches(letter)">
@@ -93,7 +93,7 @@
         display: flex;
         flex-direction: column;
         flex: 0 0 320px;
-        background: #A6D18F;
+        background: #0B5B57;
         padding: 20px 40px 40px 40px;
     }
 
@@ -110,15 +110,28 @@
         }
     }
 
+    @media screen and (max-width: 400px) {
+        .main-navigation {
+            width: 220px;
+        }
+    }
+
     .hide-main-navigation {
         margin-left: -320px;
+    }
+
+    @media screen and (max-width: 400px) {
+        .hide-main-navigation {
+            width: -220px;
+        }
     }
 
     .menu-toggle {
         position: relative;
         right: -290px;
+        bottom: 5px;
         color: #FFFFFF;
-        background: #895319;
+        background: #897106;
         width: 40px;
         height: 40px;
         text-align: center;
@@ -127,6 +140,12 @@
         transition-timing-function: ease-in;
         transition: 0.5s;
         box-shadow: 0 4px 16px rgba(104, 60, 19, 0.25);
+    }
+
+    @media screen and (max-width: 400px) {
+        .menu-toggle {
+            right: -290px;
+        }
     }
 
     .menu-toggle:hover {
@@ -140,9 +159,9 @@
     }
 
     .site-title {
-        font-family: 'Fugaz One', sans-serif;
+        font-family: 'Kaushan Script', sans-serif;
         font-size: 32px;
-        color: #2d2c35;
+        color: #FFFFFF;
     }
 
     .fa-dog {
@@ -154,7 +173,7 @@
 
     hr {
         width: 100%;
-        height: 3px;
+        height: 1px;
         border: 0;
         background: #FFFFFF;
         margin-top: 12px;
@@ -163,7 +182,7 @@
 
     .letter-filter-container {
         display: inline-block;
-        background: #895319;
+        background: #897106;
         color: #FFF;
         border-radius: 50%;
         text-align: center;

@@ -7,9 +7,82 @@
 
 <template>
     <header>
-        <h1 v-if="dogBreed.length > 0">{{ dogBreed }}<span v-if="dogSubBreed.length > 0"> / {{ dogSubBreed }}</span></h1>
+        <h1 class="site-title">&#128054; Fetch</h1>
+        <hr v-if="dogBreed.length > 0"/>
+        <h2 v-if="dogBreed.length > 0">
+            <span class="breed-heading">{{ dogBreed }}</span>
+            <span class="subbreed-heading" v-if="dogSubBreed.length > 0"> / {{ dogSubBreed }}</span>
+        </h2>
     </header>
 </template>
 
 <style scoped>
+    header {
+        background: #deedf4;
+        padding: 10px;
+    }
+
+    .site-title {
+        font-family: 'Kaushan Script', sans-serif;
+        font-size: 32px;
+        color: #0B5B57;
+        text-align: center;
+    }
+
+    @media screen and (min-width: 600px) {
+        .site-title {
+            display: none;
+        }
+    } 
+
+    hr {
+        background: #897106;
+        height: 2px;
+        width: 28%;
+        margin-left: auto;
+        margin-right: auto;
+        border: none;
+    }
+
+    @media screen and (min-width: 600px) {
+        hr {
+            display: none;
+        }
+    }
+
+    h2 {
+        font-family: 'Londrina Solid', sans-serif;
+        font-size: 32px;
+        color: #393352;
+        text-transform: capitalize;
+        margin-top: -2px;
+    }
+
+    @media screen and (max-width: 600px) {
+        h2 {
+            text-align: center;
+            font-size: 28px;
+        }
+    }
+
+    @media screen and (max-width: 460px) {
+        h2 {
+            font-size: 22px;
+        }
+    }
+
+    .breed-heading {
+        padding-left: 28px;
+        font-weight: 400;
+    }
+
+    @media screen and (max-width: 600px) {
+        .breed-heading {
+            padding-left: 0;
+        }
+    }
+
+    .subbreed-heading {
+        font-weight: 300;
+    }
 </style>

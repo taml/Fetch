@@ -10,7 +10,14 @@
 
 <style scoped>
   .content-container {
-    flex-grow: 1;
     background: #EEFAFF;
+    padding: 40px 20px 20px 20px;
+    flex-grow: 1;
+  }
+
+  @media screen and (min-width: 600px) {
+    .content-container {
+      min-height: 0;
+    }
   }
 </style>

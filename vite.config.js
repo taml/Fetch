@@ -10,8 +10,7 @@ export default defineConfig({
     VitePluginFonts({
       google: {
         families: [
-          "Neucha",
-          "Fugaz One",
+          "Kaushan Script",
           {
             name: "Londrina Solid",
             styles: "wght@300;400",

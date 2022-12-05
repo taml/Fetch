@@ -22,13 +22,31 @@
     footer {
         display: flex;
         justify-content: space-between;
-        padding: 20px;
+        background: #deedf4;
+        padding: 10px;
         width: 100%;
         font-family: 'Londrina Solid', sans-serif;
     }
 
+    @media screen and (max-width: 960px) {
+        footer {
+            text-align: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+    }
+
     .footer-credits {
         flex-grow: 1;
+        color: #393352;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    @media screen and (max-width: 960px) {
+        .footer-credits {
+            margin-bottom: 10px;
+        }
     }
 
     .footer-links {
@@ -36,8 +54,15 @@
         font-weight: 300;
     }
 
+    @media screen and (max-width: 850px) {
+        .footer-links {
+            flex-wrap: wrap;
+        }
+    }
+
     .footer-links ul li:first-child {
         font-weight: 400;
+        color: #393352;
     }
 
     .footer-links ul {
@@ -46,5 +71,25 @@
         list-style-type: none;
         margin: 0;
         padding: 0;
+    }
+
+    @media screen and (max-width: 850px) {
+        .footer-links ul {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+
+    .footer-links ul li a {
+        text-decoration: none;
+        color: #0B5B57;
+        padding-left: 10px;
+        padding-right: 10px;
+        transition-timing-function: ease-in;
+        transition: 0.5s;
+    }
+
+    .footer-links ul li a:hover {
+        color: #897106;
     }
 </style>

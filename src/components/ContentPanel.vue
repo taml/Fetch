@@ -6,33 +6,57 @@
     import ContentPagination from './ContentPagination.vue'
 
     const dogStore = useDogStore()
-    const { dogPictures, dogsAreLoading, dogBreedError, getSliceOfDogPictures } = storeToRefs(dogStore)
+    const { dogsAreLoading, dogBreedError, getSliceOfDogPictures } = storeToRefs(dogStore)
+
 </script>
 
 <template>
     <div v-if="dogsAreLoading">
         Loading!
     </div>
-    <div v-else>
+    <template v-else>
         <div v-if="(dogBreedError.length > 0)">
             {{ dogBreedError }}
         </div>
-        <div v-else class="grid">
-            <div class="grid-item" v-for="url in getSliceOfDogPictures">
-                <DogCard :url="url" />
+        <div class="grid-container" v-else>
+            <div class="grid">
+                <div class="grid-item" v-for="url in getSliceOfDogPictures">
+                    <DogCard :url="url" />
+                </div>
             </div>
-            <ContentPagination />
+            <ContentPagination v-if="getSliceOfDogPictures.length > 0" />
         </div>
-    </div>
+    </template>
 </template>
 
 <style scoped>
+.grid-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
 
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-column-gap: 16px;
-    grid-row-gap: 16px;
+    grid-column-gap: 32px;
+    grid-row-gap: 32px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: scroll;
+    padding: 20px;
+}
+
+@media screen and (max-width: 900px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 </style>
