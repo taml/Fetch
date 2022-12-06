@@ -1,12 +1,23 @@
 <script setup>
+    import { ref, onMounted, onUnmounted } from 'vue'
     import { useDogStore } from '../stores/dogStore'
     import { storeToRefs } from 'pinia'
     const dogStore = useDogStore()
     const { dogBreed, dogSubBreed } = storeToRefs(dogStore)
+
+    const windowSizeWidth = ref(window.innerWidth)
+
+    onMounted(() => {
+        window.addEventListener('resize', () => {windowSizeWidth.value = window.innerWidth})
+    })
+
+    onUnmounted(() => {
+        window.removeEventListener('resize', () => {windowSizeWidth.value = window.innerWidth})
+    })
 </script>
 
 <template>
-    <header>
+    <header v-if="windowSizeWidth <= 600 || dogBreed.length > 0">
         <h1 class="site-title">&#128054; Fetch</h1>
         <hr v-if="dogBreed.length > 0"/>
         <h2 v-if="dogBreed.length > 0">

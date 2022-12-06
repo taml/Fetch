@@ -1,12 +1,14 @@
 <script setup>
     const props = defineProps({
         url: String,
+        breed: String,
+        subBreed: String
     })
 </script>
 
 <template>
     <div class="card-container">
-        <img class="card-img" :src="url" alt=""/>
+        <img class="card-img" :src="url" :alt="`A picture of a ${breed} dog.`"/>
     </div>
 </template>
 

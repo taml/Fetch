@@ -5,9 +5,9 @@ import router from './router'
 
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
-import { faPaw, faBars, faCaretDown, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons"
+import { faPaw, faBars, faCaretDown, faChevronLeft, faChevronRight, faXmark } from "@fortawesome/free-solid-svg-icons"
 library.add(
-    faPaw, faBars, faCaretDown, faChevronLeft, faChevronRight
+    faPaw, faBars, faCaretDown, faChevronLeft, faChevronRight, faXmark
 )
 
 import './assets/main.css'

@@ -56,20 +56,22 @@
     onUnmounted(() => {
         window.removeEventListener('resize', () => {windowSizeWidth.value = window.innerWidth})
     })
-
-    console.log(windowSizeWidth.value)
 </script>
 
 <template>
     <nav :class="['main-navigation', (!toggleMenu && windowSizeWidth <= 600) && 'hide-main-navigation']">
-        <div v-if="windowSizeWidth <= 600" class="menu-toggle" @click="toggleMenu = !toggleMenu">
-            <font-awesome-icon icon="fa-solid fa-bars" />
+        <div v-if="windowSizeWidth <= 600" :class="['menu-toggle', windowSizeWidth <= 400 && toggleMenu && 'menu-toggle-open']" @click="toggleMenu = !toggleMenu">
+            <font-awesome-icon v-if="!toggleMenu" icon="fa-solid fa-bars" />
+            <font-awesome-icon v-else="toggleMenu" icon="fa-solid fa-xmark" />
         </div>
         <h1 class="site-title">&#128054; Fetch</h1>
         <hr/>
-        <div>
-            <div :class="['letter-filter-container', selectedLetter === letter && 'letter-active']" v-for="letter in alphabet" @click="findBreedMatches(letter)">
-                <AlphabetSortFilter :letter="letter" :key="letter" />
+        <div class="navigation-items">
+            <div class="letter-filter-container">
+                <h2 class="navigation-heading">Filter Dog Breeds By Letter</h2>
+                <div :class="['filter-item-container', selectedLetter === letter && 'letter-active']" v-for="letter in alphabet" @click="findBreedMatches(letter)">
+                    <AlphabetSortFilter :letter="letter" :key="letter" />
+                </div>
             </div>
             <div class="breed-results">
                 <div v-if="(dogBreedFilterList.length > 0)" v-for="breed in dogBreedFilterList">
@@ -113,6 +115,7 @@
     @media screen and (max-width: 400px) {
         .main-navigation {
             width: 220px;
+            padding: 20px;
         }
     }
 
@@ -128,7 +131,7 @@
 
     .menu-toggle {
         position: relative;
-        right: -290px;
+        right: -295px;
         bottom: 5px;
         color: #FFFFFF;
         background: #897106;
@@ -144,7 +147,13 @@
 
     @media screen and (max-width: 400px) {
         .menu-toggle {
-            right: -290px;
+            right: -315px;
+        }
+    }
+
+    @media screen and (max-width: 400px) {
+        .menu-toggle-open {
+            right: -215px;
         }
     }
 
@@ -158,17 +167,22 @@
         font-size: 22px;
     }
 
+    .fa-xmark {
+        margin-bottom: -10px;
+        margin-left: 1px;
+        font-size: 22px;
+    }
+
     .site-title {
         font-family: 'Kaushan Script', sans-serif;
         font-size: 32px;
         color: #FFFFFF;
     }
 
-    .fa-dog {
-        color: #484039;
-        position: relative;
-        left: 2px;
-        bottom: 2px;
+    @media screen and (max-width: 600px) {
+        .site-title {
+            display: none;
+        }
     }
 
     hr {
@@ -180,10 +194,30 @@
         margin-bottom: 25px;
     }
 
-    .letter-filter-container {
+    @media screen and (max-width: 600px) {
+        hr {
+            display: none;
+        }
+    }
+
+    .navigation-heading {
+        font-family: 'Londrina Solid', sans-serif;
+        font-weight: 400;
+        font-size: 20px;
+        color: #FFFFFF;
+        margin-bottom: 15px;
+    }
+
+    .navigation-items {
+        display: flex;
+        flex-direction: column;
+        height: 82%;
+    }
+
+    .filter-item-container {
         display: inline-block;
         background: #897106;
-        color: #FFF;
+        color: #FFFFFF;
         border-radius: 50%;
         text-align: center;
         width: 26px;
@@ -196,7 +230,7 @@
         box-shadow: 0 4px 16px rgba(104, 60, 19, 0.25);
     }
 
-    .letter-filter-container:hover {
+    .filter-item-container:hover {
         box-shadow: 0 4px 16px rgba(104, 60, 19, 0.5);
     }
 
@@ -208,7 +242,9 @@
         margin-top: 20px;
         overflow-y: scroll;
         overflow-x: hidden;
-        height: 400px;
+        /* height: 400px; */
+        flex: 1;
+        min-height: 0;
     }
 
     .subbreeds-list {
