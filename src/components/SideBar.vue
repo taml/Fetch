@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, onMounted, onUnmounted, computed } from 'vue'
+    import { ref, onMounted, onUnmounted } from 'vue'
     import { useDogStore } from '../stores/dogStore'
     import { getDogBreeds } from '../services/api'
     import AlphabetSortFilter from './AlphabetSortFilter.vue'
@@ -16,48 +16,68 @@
     const selectedLetter = ref('')
     const noDogsMessage = ref('')
 
+    /**
+     * Create an array of the letters a-z to display in the template
+     */
     const generateAlphabet = () => {
         for (let i = 0; i < 26; i++) {
             alphabet.value.push(String.fromCharCode(i + 97))
         }
     }
 
+    /**
+     * Find breeds that match a letter (a-z) and update the dogBreedFilterList,
+     * if there are no matches update a no match message to display in the template 
+     * @param {string} letter 
+     */
     const findBreedMatches = (letter) => {
         selectedLetter.value = letter
         dogBreedFilterList.value = dogBreedNames.filter((breed) => breed.toLowerCase().charAt(0) === letter) 
         dogBreedFilterList.value.length === 0 ? noDogsMessage.value = `Sorry there are no dog breeds available for letter ${selectedLetter.value.toUpperCase()}. Why not try a different letter!` : noDogsMessage.value = ''
     }
 
+    /**
+     * Toggle the menu closed when window width is 600px or smaller 
+     * and a dog breed/subbreed is clicked
+     */
     const closeMenu = () => {
         if(windowSizeWidth.value <= 600) toggleMenu.value = !toggleMenu.value 
     }
 
     onMounted(() => {
+        // Add listener to determine window width
         window.addEventListener('resize', () => {windowSizeWidth.value = window.innerWidth})
+        // Accept a-z key input to trigger breed filtering
         document.addEventListener('keydown', (e) => {
-            let letter = String.fromCharCode(e.keyCode).toLowerCase()
-            if (e.keyCode >= 65 && e.keyCode <= 90) {
-                findBreedMatches(letter)
+            if (/[a-z]/.test(e.key)) {
+                findBreedMatches(e.key)
             }
         })
 
         generateAlphabet()
 
+        // Make API request
         getDogBreeds().then((breeds) => {
+            // Trigger loading state whilst waiting for API request to resolve
             updateDogsAreLoading(true)
             if(breeds.status === 'success') {
                 dogBreeds = breeds.message
+                // Get the dog name key values
                 dogBreedNames = Object.keys(dogBreeds)
+                // End loading state when request is successful
                 updateDogsAreLoading(false)
             }
         }).catch((err) => {
             console.log(err)
+            // End loading state when request is unsuccessful
             updateDogsAreLoading(false)
+            // Update status message to reflect error
             updateDogAPIMsg(`There was an issue fetching the dog breeds list!`, 'error')
         })
     })
 
     onUnmounted(() => {
+        // Remove listener to determine window width
         window.removeEventListener('resize', () => {windowSizeWidth.value = window.innerWidth})
     })
 </script>
@@ -65,6 +85,7 @@
 <template>
     <nav :class="['main-navigation', (!toggleMenu && windowSizeWidth <= 600) && 'hide-main-navigation']">
         <button v-if="windowSizeWidth <= 600" :class="['menu-toggle', windowSizeWidth <= 400 && toggleMenu && 'menu-toggle-open']" @click="toggleMenu = !toggleMenu" aria-label="Menu Toggle" :aria-expanded="toggleMenu">
+            <!-- Display a nav button to toggle the nav on/off screen when the window width is 600px or smaller -->
             <font-awesome-icon v-if="!toggleMenu" icon="fa-solid fa-bars" />
             <font-awesome-icon v-else="toggleMenu" icon="fa-solid fa-xmark" />
         </button>
@@ -73,42 +94,33 @@
         <div class="navigation-items">
             <div class="letter-filter-container">
                 <h2 class="navigation-heading">Filter Dog Breeds By Letter</h2>
+                <!-- Generate buttons for the array of a-z letters -->
                 <button :class="['filter-item-container', selectedLetter === letter && 'letter-active']" v-for="letter in alphabet" @click="findBreedMatches(letter)">
                     <AlphabetSortFilter :letter="letter" :key="letter" :aria-selected="letter === selectedLetter" />
                 </button>
             </div>
-            <!-- <ul class="breed-results">
-                <li class="filter-item" v-if="(dogBreedFilterList.length > 0)" v-for="breed in dogBreedFilterList">
-                    <FilterItem :breed="breed" :hasSubBreed="(dogBreeds[breed].length > 0)" :key="breed" @click="(updateDogBreed(breed), closeMenu())" />
-                    <ul class="subbreeds-list" v-if="(dogBreeds[breed].length > 0)">
-                        <li v-for="sub in dogBreeds[breed]">
-                            <FilterItem :breed="sub" :hasSubBreed="false" :key="sub" @click="updateDogSubBreed(breed, sub), closeMenu()" />
-                        </li>
-                    </ul>
-                </li>
-                <div v-if="(noDogsMessage.length > 0)" class="menu-notice-message">
-                    <p>{{noDogsMessage}}</p>
-                </div>
-            </ul> -->
             <ul class="breed-results">
                 <li class="filter-item" v-if="(dogBreedFilterList.length > 0)" v-for="breed in dogBreedFilterList">
+                    <!-- Loop through available dog breeds and sub dog breeds -->
                     <template v-if="dogBreeds[breed].length">
                         <details>
                             <summary>
-                                <FilterItem :breed="breed" :key="breed" @click="(updateDogBreed(breed), closeMenu())" />
+                                <FilterItem :breed="breed" :key="breed" :subBreed="false" @click="(updateDogBreed(breed), closeMenu())" />
                             </summary>
                             <ul class="subbreeds-list">
                                 <li v-for="sub in dogBreeds[breed]">
-                                    <FilterItem :breed="sub" :key="sub" @click="updateDogSubBreed(breed, sub), closeMenu()" />
+                                    <FilterItem :breed="sub" :key="sub" :subBreed="true" @click="updateDogSubBreed(breed, sub), closeMenu()" />
                                 </li>
                             </ul>
                         </details>
                     </template>
                     <div class="filter-item-no-subbreed" v-else>
-                        <FilterItem :breed="breed" :key="breed" @click="(updateDogBreed(breed), closeMenu())" />
+                        <!-- If there are no sub dog breeds use div instead of details/summary elements -->
+                        <FilterItem :breed="breed" :key="breed" :subBreed="false" @click="(updateDogBreed(breed), closeMenu())" />
                     </div>
                 </li>
                 <div v-if="(noDogsMessage.length > 0)" class="menu-notice-message">
+                    <!-- Display no letter matches content -->
                     <p>{{noDogsMessage}}</p>
                 </div>
             </ul>
