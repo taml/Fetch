@@ -1,7 +1,5 @@
-<script setup>
-</script>
-
 <template>
+    <!-- Footer Section -->
     <footer>
         <div class="footer-credits">
             <p>Created by Tamsin L-P.</p>

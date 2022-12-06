@@ -1,28 +1,37 @@
-# Fetch
+# 🐶 Fetch
 
-This template should help get you started developing with Vue 3 in Vite.
+This project utilises JavaScript, Vue, HTML and CSS to fetch and display pictures of dogs via an API. 
 
-## Recommended IDE Setup
+The API parsed is [Dog API](https://dog.ceo/dog-api/) which returns either a `message` Object containing a list of dog breeds/subbreeds or an Array containing a list of pictures and an API `status`.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+This project also uses some cartoon dog graphics courtesy of [Pixabay](https://pixabay.com/) and icons from [Font Awesome](https://fontawesome.com/).
 
-## Customize configuration
+##### Features
+✔️ Filtering dog breeds/subbreeds by letters A-Z
+✔️ Pagination for list of photos
+✔️ Adaptive, responsive design
+✔️ Accessibility Consideration (colour ratios, aria labels and tab order)
+✔️ Local Store (Pinia) for managing state
+
+Instructions for running and building the project can be found below. 
+
+## Project Compiler
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-## Project Setup
+### Please Use the Following to Setup the Project and Install Dependencies
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### Please Use the Following to Run the Project Locally
 
 ```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+### Please Use the Following to Compile and Minify the Project for Production
 
 ```sh
 npm run build

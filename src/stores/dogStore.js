@@ -5,7 +5,7 @@ import { getDogBreedPictures, getDogSubBreedPictures } from '../services/api'
 export const useDogStore = defineStore("dogStore", () => {
     const dogBreed = ref('')
     const dogSubBreed = ref('')
-    const dogBreedError = ref('')
+    const dogBreedMsg = ref({ message: "Get pictures of 'pawesome' dogs by using the filters within the left-hand menu to select different dog breeds.", type: 'info'})
     const dogsAreLoading = ref(false)
     const dogPictures = ref([])
     const skip = 6
@@ -21,7 +21,7 @@ export const useDogStore = defineStore("dogStore", () => {
 
     const updateDogBreed = (breed) => {
         updateDogsAreLoading(true)
-        updateDogAPIErrorMsg('')
+        updateDogAPIMsg('', 'none')
         currentPage.value = 1
         dogBreed.value = breed
         dogSubBreed.value = ''
@@ -34,14 +34,14 @@ export const useDogStore = defineStore("dogStore", () => {
             }).catch((err) => {
                 console.log(err)
                 updateDogsAreLoading(false)
-                updateDogAPIErrorMsg(`There was an issue fetching the breed ${breed}!`)
+                updateDogAPIMsg(`There was an issue fetching the breed ${breed}!`, 'error')
             })
         }
     }
 
     const updateDogSubBreed = (breed, subBreed) => {
         updateDogsAreLoading(true)
-        updateDogAPIErrorMsg('')
+        updateDogAPIMsg('', 'none')
         currentPage.value = 1
         dogBreed.value = breed
         dogSubBreed.value = subBreed
@@ -54,13 +54,13 @@ export const useDogStore = defineStore("dogStore", () => {
             }).catch((err) => {
                 console.log(err)
                 updateDogsAreLoading(false)
-                updateDogAPIErrorMsg(`There was an issue fetching the subbreed ${subBreed}!`)
+                updateDogAPIMsg(`There was an issue fetching the subbreed ${subBreed}!`, 'error')
             })
         }
     }
 
-    const updateDogAPIErrorMsg = (error) => {
-        dogBreedError.value = error
+    const updateDogAPIMsg = (message, type) => {
+        dogBreedMsg.value = { message, type }
     }
 
     const updateDogsAreLoading = (areLoading) => {
@@ -76,8 +76,8 @@ export const useDogStore = defineStore("dogStore", () => {
     }
 
     return { 
-        dogBreed, dogSubBreed, dogBreedError, dogsAreLoading, dogPictures, currentPage, getNumPages, getSliceOfDogPictures,
-        updateDogBreed, updateDogSubBreed, updateDogAPIErrorMsg, updateDogsAreLoading,
+        dogBreed, dogSubBreed, dogBreedMsg, dogsAreLoading, dogPictures, currentPage, getNumPages, getSliceOfDogPictures,
+        updateDogBreed, updateDogSubBreed, updateDogAPIMsg, updateDogsAreLoading,
         incrementCurrentPage, decrementCurrentPage  
     }
 })

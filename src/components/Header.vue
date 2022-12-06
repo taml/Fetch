@@ -2,21 +2,27 @@
     import { ref, onMounted, onUnmounted } from 'vue'
     import { useDogStore } from '../stores/dogStore'
     import { storeToRefs } from 'pinia'
+
+    /* Get dogBreed and subBreed from the dogStore and the screen
+    width determine which elememnts of the header should bre shown
+     in the template */
     const dogStore = useDogStore()
     const { dogBreed, dogSubBreed } = storeToRefs(dogStore)
-
     const windowSizeWidth = ref(window.innerWidth)
 
     onMounted(() => {
+        // Add listener to determine window width
         window.addEventListener('resize', () => {windowSizeWidth.value = window.innerWidth})
     })
 
     onUnmounted(() => {
+        // Remove listener to determine window width
         window.removeEventListener('resize', () => {windowSizeWidth.value = window.innerWidth})
     })
 </script>
 
 <template>
+    <!-- Header Section -->
     <header v-if="windowSizeWidth <= 600 || dogBreed.length > 0">
         <h1 class="site-title">&#128054; Fetch</h1>
         <hr v-if="dogBreed.length > 0"/>

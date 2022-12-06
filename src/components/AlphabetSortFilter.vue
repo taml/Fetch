@@ -1,6 +1,8 @@
 <script setup>
+    /* AlphabetSortFilter takes one prop to display a letter 
+    of the alphabet */
     const props = defineProps({
-        letter: String,
+        letter: String
     })
 </script>
 

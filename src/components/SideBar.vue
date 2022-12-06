@@ -6,7 +6,7 @@
     import FilterItem from './FilterItem.vue'
 
     const dogStore = useDogStore()
-    const { updateDogBreed, updateDogSubBreed, updateDogsAreLoading, updateDogAPIErrorMsg } = dogStore
+    const { updateDogBreed, updateDogSubBreed, updateDogsAreLoading, updateDogAPIMsg } = dogStore
     const windowSizeWidth = ref(window.innerWidth)
     const toggleMenu = ref(false)
     const alphabet = ref([])
@@ -16,10 +16,6 @@
     const selectedLetter = ref('')
     const noDogsMessage = ref('')
 
-    // const dogBreedFilterList = computed(() => {
-    //     return dogBreedNames.filter((breed) => breed.toLowerCase().charAt(0) === selectedLetter.value)
-    // })
-
     const generateAlphabet = () => {
         for (let i = 0; i < 26; i++) {
             alphabet.value.push(String.fromCharCode(i + 97))
@@ -27,20 +23,28 @@
     }
 
     const findBreedMatches = (letter) => {
-        // dogBreedFilterList.value = []
         selectedLetter.value = letter
         dogBreedFilterList.value = dogBreedNames.filter((breed) => breed.toLowerCase().charAt(0) === letter) 
         dogBreedFilterList.value.length === 0 ? noDogsMessage.value = `Sorry there are no dog breeds available for letter ${selectedLetter.value.toUpperCase()}. Why not try a different letter!` : noDogsMessage.value = ''
     }
 
+    const closeMenu = () => {
+        if(windowSizeWidth.value <= 600) toggleMenu.value = !toggleMenu.value 
+    }
+
     onMounted(() => {
         window.addEventListener('resize', () => {windowSizeWidth.value = window.innerWidth})
+        document.addEventListener('keydown', (e) => {
+            let letter = String.fromCharCode(e.keyCode).toLowerCase()
+            if (e.keyCode >= 65 && e.keyCode <= 90) {
+                findBreedMatches(letter)
+            }
+        })
 
         generateAlphabet()
 
         getDogBreeds().then((breeds) => {
             updateDogsAreLoading(true)
-            updateDogAPIErrorMsg('')
             if(breeds.status === 'success') {
                 dogBreeds = breeds.message
                 dogBreedNames = Object.keys(dogBreeds)
@@ -49,7 +53,7 @@
         }).catch((err) => {
             console.log(err)
             updateDogsAreLoading(false)
-            updateDogAPIErrorMsg(`There was an issue fetching the dog breeds list!`)
+            updateDogAPIMsg(`There was an issue fetching the dog breeds list!`, 'error')
         })
     })
 
@@ -60,32 +64,54 @@
 
 <template>
     <nav :class="['main-navigation', (!toggleMenu && windowSizeWidth <= 600) && 'hide-main-navigation']">
-        <div v-if="windowSizeWidth <= 600" :class="['menu-toggle', windowSizeWidth <= 400 && toggleMenu && 'menu-toggle-open']" @click="toggleMenu = !toggleMenu">
+        <button v-if="windowSizeWidth <= 600" :class="['menu-toggle', windowSizeWidth <= 400 && toggleMenu && 'menu-toggle-open']" @click="toggleMenu = !toggleMenu" aria-label="Menu Toggle" :aria-expanded="toggleMenu">
             <font-awesome-icon v-if="!toggleMenu" icon="fa-solid fa-bars" />
             <font-awesome-icon v-else="toggleMenu" icon="fa-solid fa-xmark" />
-        </div>
+        </button>
         <h1 class="site-title">&#128054; Fetch</h1>
         <hr/>
         <div class="navigation-items">
             <div class="letter-filter-container">
                 <h2 class="navigation-heading">Filter Dog Breeds By Letter</h2>
-                <div :class="['filter-item-container', selectedLetter === letter && 'letter-active']" v-for="letter in alphabet" @click="findBreedMatches(letter)">
-                    <AlphabetSortFilter :letter="letter" :key="letter" />
-                </div>
+                <button :class="['filter-item-container', selectedLetter === letter && 'letter-active']" v-for="letter in alphabet" @click="findBreedMatches(letter)">
+                    <AlphabetSortFilter :letter="letter" :key="letter" :aria-selected="letter === selectedLetter" />
+                </button>
             </div>
-            <div class="breed-results">
-                <div v-if="(dogBreedFilterList.length > 0)" v-for="breed in dogBreedFilterList">
-                    <FilterItem :breed="breed" :hasSubBreed="(dogBreeds[breed].length > 0)" :key="breed" @click="updateDogBreed(breed)" />
-                    <div class="subbreeds-list" v-if="(dogBreeds[breed].length > 0)">
-                        <div v-for="sub in dogBreeds[breed]">
-                            <FilterItem :breed="sub" :hasSubBreed="false" :key="sub" @click="updateDogSubBreed(breed, sub)" />
-                        </div>
-                    </div>
-                </div>
+            <!-- <ul class="breed-results">
+                <li class="filter-item" v-if="(dogBreedFilterList.length > 0)" v-for="breed in dogBreedFilterList">
+                    <FilterItem :breed="breed" :hasSubBreed="(dogBreeds[breed].length > 0)" :key="breed" @click="(updateDogBreed(breed), closeMenu())" />
+                    <ul class="subbreeds-list" v-if="(dogBreeds[breed].length > 0)">
+                        <li v-for="sub in dogBreeds[breed]">
+                            <FilterItem :breed="sub" :hasSubBreed="false" :key="sub" @click="updateDogSubBreed(breed, sub), closeMenu()" />
+                        </li>
+                    </ul>
+                </li>
                 <div v-if="(noDogsMessage.length > 0)" class="menu-notice-message">
                     <p>{{noDogsMessage}}</p>
                 </div>
-            </div>
+            </ul> -->
+            <ul class="breed-results">
+                <li class="filter-item" v-if="(dogBreedFilterList.length > 0)" v-for="breed in dogBreedFilterList">
+                    <template v-if="dogBreeds[breed].length">
+                        <details>
+                            <summary>
+                                <FilterItem :breed="breed" :key="breed" @click="(updateDogBreed(breed), closeMenu())" />
+                            </summary>
+                            <ul class="subbreeds-list">
+                                <li v-for="sub in dogBreeds[breed]">
+                                    <FilterItem :breed="sub" :key="sub" @click="updateDogSubBreed(breed, sub), closeMenu()" />
+                                </li>
+                            </ul>
+                        </details>
+                    </template>
+                    <div class="filter-item-no-subbreed" v-else>
+                        <FilterItem :breed="breed" :key="breed" @click="(updateDogBreed(breed), closeMenu())" />
+                    </div>
+                </li>
+                <div v-if="(noDogsMessage.length > 0)" class="menu-notice-message">
+                    <p>{{noDogsMessage}}</p>
+                </div>
+            </ul>
         </div>
     </nav>
 </template>
@@ -138,6 +164,7 @@
         width: 40px;
         height: 40px;
         text-align: center;
+        border: 0;
         border-radius: 10px;
         cursor: pointer;
         transition-timing-function: ease-in;
@@ -162,13 +189,13 @@
     }
 
     .fa-bars {
-        margin-bottom: -10px;
+        margin-bottom: -2px;
         margin-left: 1px;
         font-size: 22px;
     }
 
     .fa-xmark {
-        margin-bottom: -10px;
+        margin-bottom: -2px;
         margin-left: 1px;
         font-size: 22px;
     }
@@ -177,6 +204,7 @@
         font-family: 'Kaushan Script', sans-serif;
         font-size: 32px;
         color: #FFFFFF;
+        margin-top: -8px;
     }
 
     @media screen and (max-width: 600px) {
@@ -187,9 +215,9 @@
 
     hr {
         width: 100%;
-        height: 1px;
+        height: 2px;
         border: 0;
-        background: #FFFFFF;
+        background: #D1D0D0;
         margin-top: 12px;
         margin-bottom: 25px;
     }
@@ -218,6 +246,7 @@
         display: inline-block;
         background: #897106;
         color: #FFFFFF;
+        border: 1px solid #FFFFFF;
         border-radius: 50%;
         text-align: center;
         width: 26px;
@@ -227,28 +256,46 @@
         cursor: pointer;
         transition-timing-function: ease-in;
         transition: 0.5s;
-        box-shadow: 0 4px 16px rgba(104, 60, 19, 0.25);
+        box-shadow: 0 4px 16px rgba(147, 90, 37, 0.25);
     }
 
     .filter-item-container:hover {
+        background: #4E4106;
         box-shadow: 0 4px 16px rgba(104, 60, 19, 0.5);
     }
 
     .letter-active {
-        background: #808080;
+        background: #4E4106;
     }
 
     .breed-results {
         margin-top: 20px;
-        overflow-y: scroll;
+        overflow-y: auto;
         overflow-x: hidden;
-        /* height: 400px; */
         flex: 1;
         min-height: 0;
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .filter-item {
+        font-family: 'Londrina Solid', sans-serif;
+        font-size: 18px;
+        text-transform: capitalize;
+        color: #FFFFFF;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        cursor: pointer;
+    }
+
+    .filter-item-no-subbreed {
+        margin-left: 15px;
     }
 
     .subbreeds-list {
         padding-left: 15px;
+        list-style-type: none;
+        font-size: 17px;
     }
 
     .menu-notice-message {

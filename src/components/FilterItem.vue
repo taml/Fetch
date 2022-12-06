@@ -1,34 +1,37 @@
 <script setup>
     import { useDogStore } from '../stores/dogStore'
     import { storeToRefs } from 'pinia'
-    const dogStore = useDogStore()
-    const { dogBreed, dogSubBreed } = storeToRefs(dogStore)
 
+    /* Get dogBreed from the dogStore to mark as selected
+    in the template for accessibility and visual purposes */
+    const dogStore = useDogStore()
+    const { dogBreed } = storeToRefs(dogStore)
+
+    /* DogCard takes a breed prop to display the breed within
+    the template and to determine visual iconography */
     const props = defineProps({
         breed: String,
-        hasSubBreed: Boolean
     })
 </script>
 
 <template>
-    <div class="filter-item">
-        <p>
+    <a class="breed-link" href="javascript:void(0)" :aria-selected="breed === dogBreed">
+            {{ breed }}
             <span :class="['breed-icon', breed !== dogBreed && 'selected-breed']"><font-awesome-icon icon="fa-solid fa-paw" /></span>
-                {{ breed }}
-            <span v-if="hasSubBreed"><font-awesome-icon icon="fa-solid fa-caret-down" /></span>
-        </p>
-    </div>
+    </a>
 </template>
 
 <style scoped>
-    .filter-item {
-        font-family: 'Londrina Solid', sans-serif;
-        font-size: 18px;
-        text-transform: capitalize;
+
+    .breed-link {
+        text-decoration: none;
         color: #FFFFFF;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        cursor: pointer;
+        transition-timing-function: ease-in;
+        transition: 0.5s;
+    }
+
+    .breed-link:hover {
+        color: #D1D0D0;
     }
 
     .selected-breed {
@@ -36,11 +39,7 @@
     }
 
     .breed-icon {
-        padding-right: 5px;
-        color: #D1D0D0;
-    }
-
-    .fa-caret-down {
         padding-left: 5px;
+        color: #D1D0D0;
     }
 </style>

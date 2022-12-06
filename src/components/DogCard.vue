@@ -1,4 +1,6 @@
 <script setup>
+    /* DogCard takes three props to populate a card URL 
+    and alt attribute */
     const props = defineProps({
         url: String,
         breed: String,
@@ -7,9 +9,9 @@
 </script>
 
 <template>
-    <div class="card-container">
-        <img class="card-img" :src="url" :alt="`A picture of a ${breed} dog.`"/>
-    </div>
+    <figure class="card-container">
+        <img class="card-img" :src="url" :alt="`A picture of a ${breed} ${subBreed.length > 0 && `- ${subBreed}`} dog.`"/>
+    </figure>
 </template>
 
 <style scoped>
