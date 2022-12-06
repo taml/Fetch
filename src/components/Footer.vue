@@ -6,7 +6,7 @@
         </div>
         <div class="footer-links">
             <ul>
-                <li><p>Dog Charities</p></li>
+                <li><p>Dog Charities:</p></li>
                 <li><a href="https://www.guidedogs.org.uk/" target="_blank">Guide Dogs</a></li>
                 <li><a href="https://www.thinbluepaw.org.uk/" target="_blank">Thin Blue Paw</a></li>
                 <li><a href="https://hollyhedge.org.uk" target="_blank">Holly Hedge</a></li>
