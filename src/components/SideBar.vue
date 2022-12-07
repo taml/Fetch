@@ -49,7 +49,7 @@
         window.addEventListener('resize', () => {windowSizeWidth.value = window.innerWidth})
         // Accept a-z key input to trigger breed filtering
         document.addEventListener('keydown', (e) => {
-            if (/[a-z]/.test(e.key)) {
+            if (/^[a-z]+$/.test(e.key)) {
                 findBreedMatches(e.key)
             }
         })
@@ -101,7 +101,7 @@
             </div>
             <!-- Toggle on the Favourite dogs section -->
             <div class="favourite-menu-item">
-                <a href="javascript:void(0)" @click="toggleFavourites(true)" :aria-selected="favouriteToggled"><font-awesome-icon icon="fa-solid fa-heart" /> Favourite Dogs</a>
+                <a href="javascript:void(0)" @click="toggleFavourites(true), closeMenu()" :aria-selected="favouriteToggled"><font-awesome-icon icon="fa-solid fa-heart" /> Favourite Dogs</a>
             </div>
             <div class="breed-results">
                 <ul>
