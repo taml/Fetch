@@ -9,6 +9,7 @@ This project also uses some cartoon dog graphics courtesy of [Pixabay](https://p
 #### Features
 + Filtering dog breeds/subbreeds by letters A-Z ✔️
 + Pagination for list of photos ✔️
++ Add favourite dog pictures ✔️
 + Adaptive, responsive design ✔️
 + Accessibility Consideration (colour ratios, aria labels and tab order) ✔️
 + Local Store (Pinia) for managing state ✔️
