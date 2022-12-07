@@ -4,15 +4,30 @@
 
     /* Get currentPage and numPages from the dogStore to display
     in the template, and determine whether the pagination buttons 
-    should be displayed in the template */
+    should be displayed in the template and which version of pagination */
     const dogStore = useDogStore()
-    const { currentPage, getNumPages } = storeToRefs(dogStore)
+    const { currentPage, getNumPages, getFavouriteNumPages, favouriteToggled } = storeToRefs(dogStore)
     const { incrementCurrentPage, decrementCurrentPage } = dogStore
 
 </script>
 
 <template>
-    <div className="content-pagination">
+    <div v-if="favouriteToggled" className="content-pagination">
+        <!-- Use favourite dogs list state to populate pagination -->
+        <div class="content-page-pagination-prev">
+            <button v-if="getFavouriteNumPages > 1 && currentPage !== 1" class="btn" @click="decrementCurrentPage" aria-label="Previous Page"><font-awesome-icon icon="fa-solid fa-chevron-left" /><span>Prev</span></button>
+        </div>
+
+        <div v-if="getFavouriteNumPages > 1">
+            <p className="content-page-pagination-total">{{currentPage}}/{{getFavouriteNumPages}}</p>
+        </div>
+
+        <div class="content-page-pagination-next">
+            <button v-if="currentPage !== getFavouriteNumPages" class="btn" @click="incrementCurrentPage" aria-label="Next Page"><span>Next</span><font-awesome-icon icon="fa-solid fa-chevron-right" /></button>
+        </div>
+    </div>
+    <div v-else className="content-pagination">
+        <!-- Use fetched dogs list state to populate pagination -->
         <div class="content-page-pagination-prev">
             <button v-if="getNumPages > 1 && currentPage !== 1" class="btn" @click="decrementCurrentPage" aria-label="Previous Page"><font-awesome-icon icon="fa-solid fa-chevron-left" /><span>Prev</span></button>
         </div>

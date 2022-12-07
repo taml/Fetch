@@ -11,6 +11,8 @@ export const useDogStore = defineStore("dogStore", () => {
     const dogPictures = ref([])
     const skip = 6
     const currentPage = ref(1)
+    const favouriteDogs = ref([])
+    const favouriteToggled = ref(false)
 
     // Getters
 
@@ -23,11 +25,27 @@ export const useDogStore = defineStore("dogStore", () => {
     })
 
     /**
+     * Gets a section of the favourites dog pictures array based on a start position and an end
+     * position calculated using the currentPage number and the skip page amount
+     */
+    const getSliceOfFavouriteDogPictures = computed(() => {
+        return favouriteDogs.value.slice(skip * currentPage.value - skip, skip * currentPage.value)
+    })
+
+    /**
      * Gets how many pages pagination should use based on how many dog pictures
      * there are divided by the amount of pictures to skip each page increment/decrement
      */
     const getNumPages = computed(() => {
         return Math.ceil(dogPictures.value.length / skip)
+    })
+
+    /**
+     * Gets how many pages pagination should use based on how many favourite dog pictures
+     * there are divided by the amount of pictures to skip each page increment/decrement
+     */
+     const getFavouriteNumPages = computed(() => {
+        return Math.ceil(favouriteDogs.value.length / skip)
     })
 
     // Setters
@@ -132,9 +150,39 @@ export const useDogStore = defineStore("dogStore", () => {
         currentPage.value--
     }
 
+    /**
+     * Sets the favourite dogs toggled state to true or false
+     * and resets the currentPage value
+     * @param {boolean} toggled 
+     */
+    const toggleFavourites = (toggled) => {
+        if(toggled) { 
+            currentPage.value = 1 
+        }
+        favouriteToggled.value = toggled
+    }
+
+    /**
+     * Adds dog picture URLs to the favouriteDogs array
+     * @param {string} picture 
+     */
+    const addToFavourites = (picture) => {
+        favouriteDogs.value.push(picture)
+    }
+
+    /**
+     * Removes dog picture URLs from the favouriteDogs array
+     * @param {string} picture 
+     */
+    const removeFromFavourites = (picture) => {
+        let index = favouriteDogs.value.findIndex((pic) => pic === picture)
+        favouriteDogs.value.splice(index, 1)
+    }
+
     return { 
-        dogBreed, dogSubBreed, dogBreedMsg, dogsAreLoading, dogPictures, currentPage, getNumPages, getSliceOfDogPictures,
+        dogBreed, dogSubBreed, dogBreedMsg, dogsAreLoading, dogPictures, currentPage, favouriteDogs, favouriteToggled, 
+        getNumPages, getFavouriteNumPages, getSliceOfDogPictures, getSliceOfFavouriteDogPictures,
         updateDogBreed, updateDogSubBreed, updateDogAPIMsg, updateDogsAreLoading,
-        incrementCurrentPage, decrementCurrentPage  
+        incrementCurrentPage, decrementCurrentPage, toggleFavourites, addToFavourites, removeFromFavourites  
     }
 })

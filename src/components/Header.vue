@@ -7,7 +7,7 @@
     width determine which elememnts of the header should bre shown
      in the template */
     const dogStore = useDogStore()
-    const { dogBreed, dogSubBreed } = storeToRefs(dogStore)
+    const { dogBreed, dogSubBreed, favouriteToggled } = storeToRefs(dogStore)
     const windowSizeWidth = ref(window.innerWidth)
 
     onMounted(() => {
@@ -23,10 +23,13 @@
 
 <template>
     <!-- Header Section -->
-    <header v-if="windowSizeWidth <= 600 || dogBreed.length > 0">
+    <header v-if="(windowSizeWidth <= 600 || dogBreed.length > 0 || favouriteToggled)">
         <h1 class="site-title">&#128054; Fetch</h1>
-        <hr v-if="dogBreed.length > 0"/>
-        <h2 v-if="dogBreed.length > 0">
+        <hr v-if="(dogBreed.length > 0 || favouriteToggled)"/>
+        <h2 v-if="favouriteToggled">
+            <span class="breed-heading">Favourite Dogs</span>
+        </h2>
+        <h2 v-else-if="dogBreed.length > 0">
             <span class="breed-heading">{{ dogBreed }}</span>
             <span class="subbreed-heading" v-if="dogSubBreed.length > 0"> / {{ dogSubBreed }}</span>
         </h2>

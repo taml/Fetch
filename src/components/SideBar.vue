@@ -6,7 +6,7 @@
     import FilterItem from './FilterItem.vue'
 
     const dogStore = useDogStore()
-    const { updateDogBreed, updateDogSubBreed, updateDogsAreLoading, updateDogAPIMsg } = dogStore
+    const { updateDogBreed, updateDogSubBreed, updateDogsAreLoading, updateDogAPIMsg, toggleFavourites, favouriteToggled } = dogStore
     const windowSizeWidth = ref(window.innerWidth)
     const toggleMenu = ref(false)
     const alphabet = ref([])
@@ -99,31 +99,37 @@
                     <AlphabetSortFilter :letter="letter" :key="letter" :aria-selected="letter === selectedLetter" />
                 </button>
             </div>
-            <ul class="breed-results">
-                <li class="filter-item" v-if="(dogBreedFilterList.length > 0)" v-for="breed in dogBreedFilterList">
+            <!-- Toggle on the Favourite dogs section -->
+            <div class="favourite-menu-item">
+                <a href="javascript:void(0)" @click="toggleFavourites(true)" :aria-selected="favouriteToggled"><font-awesome-icon icon="fa-solid fa-heart" /> Favourite Dogs</a>
+            </div>
+            <div class="breed-results">
+                <ul>
+                    <li class="filter-item" v-if="(dogBreedFilterList.length > 0)" v-for="breed in dogBreedFilterList">
                     <!-- Loop through available dog breeds and sub dog breeds -->
-                    <template v-if="dogBreeds[breed].length">
-                        <details>
-                            <summary>
-                                <FilterItem :breed="breed" :key="breed" :subBreed="false" @click="(updateDogBreed(breed), closeMenu())" />
-                            </summary>
-                            <ul class="subbreeds-list">
-                                <li v-for="sub in dogBreeds[breed]">
-                                    <FilterItem :breed="sub" :key="sub" :subBreed="true" @click="updateDogSubBreed(breed, sub), closeMenu()" />
-                                </li>
-                            </ul>
-                        </details>
-                    </template>
-                    <div class="filter-item-no-subbreed" v-else>
-                        <!-- If there are no sub dog breeds use div instead of details/summary elements -->
-                        <FilterItem :breed="breed" :key="breed" :subBreed="false" @click="(updateDogBreed(breed), closeMenu())" />
-                    </div>
-                </li>
+                        <template v-if="dogBreeds[breed].length">
+                            <details>
+                                <summary>
+                                    <FilterItem :breed="breed" :key="breed" :subBreed="false" @click="(updateDogBreed(breed), closeMenu(), toggleFavourites(false))" />
+                                </summary>
+                                <ul class="subbreeds-list">
+                                    <li v-for="sub in dogBreeds[breed]">
+                                        <FilterItem :breed="sub" :key="sub" :subBreed="true" @click="updateDogSubBreed(breed, sub), closeMenu(), toggleFavourites(false)" />
+                                    </li>
+                                </ul>
+                            </details>
+                        </template>
+                        <div class="filter-item-no-subbreed" v-else>
+                            <!-- If there are no sub dog breeds use div instead of details/summary elements -->
+                            <FilterItem :breed="breed" :key="breed" :subBreed="false" @click="(updateDogBreed(breed), closeMenu(), toggleFavourites(false))" />
+                        </div>
+                    </li>
+                </ul>
                 <div v-if="(noDogsMessage.length > 0)" class="menu-notice-message">
                     <!-- Display no letter matches content -->
                     <p>{{noDogsMessage}}</p>
                 </div>
-            </ul>
+            </div>
         </div>
     </nav>
 </template>
@@ -251,7 +257,7 @@
     .navigation-items {
         display: flex;
         flex-direction: column;
-        height: 82%;
+        height: 85%;
     }
 
     .filter-item-container {
@@ -280,12 +286,36 @@
         background: #4E4106;
     }
 
+    .favourite-menu-item {
+        font-family: 'Londrina Solid', sans-serif;
+        font-size: 18px;
+        margin: 20px 5px 0 0;
+    }
+
+    .favourite-menu-item a {
+        color: #FFFFFF;
+        text-decoration: none;
+        transition-timing-function: ease-in;
+        transition: 0.5s;
+    }
+
+    .favourite-menu-item a:hover {
+        color: #D1D0D0;
+    }
+
+    .fa-heart {
+        margin-right: 5px;
+    }
+
     .breed-results {
         margin-top: 20px;
         overflow-y: auto;
         overflow-x: hidden;
         flex: 1;
         min-height: 0;
+    }
+
+    .breed-results ul {
         list-style-type: none;
         padding: 0;
     }
@@ -308,6 +338,10 @@
         padding-left: 15px;
         list-style-type: none;
         font-size: 17px;
+    }
+
+    .subbreeds-list li {
+        margin-left: 30px;
     }
 
     .menu-notice-message {

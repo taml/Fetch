@@ -11,7 +11,7 @@
 <style scoped>
   .content-container {
     background: #EEFAFF;
-    padding: 40px 20px 20px 20px;
+    padding: 20px;
     flex-grow: 1;
   }
 

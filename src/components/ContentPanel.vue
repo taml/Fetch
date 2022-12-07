@@ -9,7 +9,8 @@
     and determine which section should be displayed in
     the template */
     const dogStore = useDogStore()
-    const { dogsAreLoading, dogBreedMsg, getSliceOfDogPictures, dogBreed, dogSubBreed } = storeToRefs(dogStore)
+    const { dogsAreLoading, dogBreedMsg, getSliceOfDogPictures, 
+        dogBreed, dogSubBreed, getSliceOfFavouriteDogPictures, favouriteToggled } = storeToRefs(dogStore)
 
 </script>
 
@@ -20,6 +21,14 @@
             <img src="../assets/Dog_Loading.png" alt="A picture of a dog chasing a ball." />
             <h1>Loading!</h1>
             <p><font-awesome-icon icon="fa-solid fa-bone" spin aria-label="Spinning Dog Bone Loader" /> Fetching all the dogs.</p>
+        </div>
+    </section>
+    <section class="text-container" v-else-if="favouriteToggled && getSliceOfFavouriteDogPictures.length === 0">
+        <!-- Display empty favourites section -->
+        <div>
+            <img src="../assets/Dog_Favourite.png" alt="A picture of long haired dog." />
+            <h1>No Favourite Dogs Added</h1>
+            <p><font-awesome-icon icon="fa-regular fa-heart" /> Toggle the heart icon on dog pictures to add or remove them from your favourites.</p>
         </div>
     </section>
     <template v-else>
@@ -38,13 +47,24 @@
             </div>
         </section>
         <section class="grid-container" v-else>
-            <!-- Display dog picture grid section -->
-            <div class="grid">
-                <div class="grid-item" v-for="url in getSliceOfDogPictures">
-                    <DogCard :url="url" :breed="dogBreed" :subBreed="dogSubBreed" />
+            <template v-if="favouriteToggled">
+                <!-- Display favourite dog picture grid section -->
+                <div class="grid">
+                    <div class="grid-item" v-for="url in getSliceOfFavouriteDogPictures">
+                        <DogCard :url="url" />
+                    </div>
                 </div>
-            </div>
-            <ContentPagination v-if="getSliceOfDogPictures.length > 0" />
+                <ContentPagination v-if="getSliceOfFavouriteDogPictures.length > 0" />
+            </template>
+            <template v-else>
+                <!-- Display dog picture grid section -->
+                <div class="grid">
+                    <div class="grid-item" v-for="url in getSliceOfDogPictures">
+                        <DogCard :url="url" :breed="dogBreed" :subBreed="dogSubBreed" />
+                    </div>
+                </div>
+                <ContentPagination v-if="getSliceOfDogPictures.length > 0" />
+            </template>
         </section>
     </template>
 </template>
@@ -90,6 +110,10 @@
     }
 
     .fa-bone {
+        margin-right: 7px;
+    }
+
+    .fa-heart {
         margin-right: 7px;
     }
 
