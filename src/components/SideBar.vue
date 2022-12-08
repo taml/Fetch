@@ -148,7 +148,7 @@
             display: block;
             width: 320px;
             position: fixed;
-            z-index: 1;
+            z-index: 2;
             height: 100%;
             opacity: 1;
             -webkit-transition: margin-left 100ms cubic-bezier(0.65, 0.05, 0.36, 1);
